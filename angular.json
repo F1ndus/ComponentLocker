@@ -129,6 +129,41 @@
           }
         }
       }
+    },
+    "componentLocker": {
+      "root": "projects/component-locker",
+      "sourceRoot": "projects/component-locker/src",
+      "projectType": "library",
+      "prefix": "cl",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/component-locker/tsconfig.lib.json",
+            "project": "projects/component-locker/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/component-locker/src/test.ts",
+            "tsConfig": "projects/component-locker/tsconfig.spec.json",
+            "karmaConfig": "projects/component-locker/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/component-locker/tsconfig.lib.json",
+              "projects/component-locker/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "locker-demo"

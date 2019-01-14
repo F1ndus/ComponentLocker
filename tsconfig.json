@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "component-locker": [
+        "dist/component-locker"
+      ],
+      "component-locker/*": [
+        "dist/component-locker/*"
+      ]
+    }
   }
 }
