@@ -9,4 +9,95 @@ describe('ComponentLockerService', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     expect(service).toBeTruthy();
   });
+
+  it('should hold new element', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement')[0]).toEqual('test');
+  });
+
+  it('should hold two elements, not overriding the old value', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'firstelement');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement').length).toEqual(2);
+  });
+
+  it('should create 2 entries in the map', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'secondelement');
+    expect(service.map.size).toBe(2);
+    expect(service.map.get('firstelement').length).toEqual(1);
+    expect(service.map.get('secondelement').length).toEqual(1);
+  });
+
+  it('should remove entry from the map', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'firstelement');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement').length).toEqual(2);
+    service.unregister('test');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement').length).toEqual(1);
+    expect(service.map.get('firstelement')[0]).toEqual('test2');
+  });
+
+  it('should remove entry from the map 2', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'firstelement');
+    service.register('test3', 'firstelement');
+    service.register('test4', 'firstelement');
+    service.register('test5', 'firstelement');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement').length).toEqual(5);
+    service.unregister('test');
+    expect(service.map.size).toBe(1);
+    expect(service.map.get('firstelement').length).toEqual(4);
+  });
+
+  /**
+   *  firstelement <-test
+   *               <-test2
+   */
+
+  it('should return 3 item array', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'firstelement');
+    const items = service.lock('firstelement');
+    console.log(items);
+    expect(items.length).toBe(3);
+  });
+
+  /**
+   *  firstelement<-test<-test2
+   */
+
+  it('should return 3 item array', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'test');
+    const items = service.lock('firstelement');
+    console.log(items);
+    expect(items.length).toBe(3);
+  });
+
+  /**
+   *  firstelement<-test<-test2
+   *  secondelement<-test3
+   */
+  it('should return 3 item array, ignoring the not connected component', () => {
+    const service: ComponentLockerService = TestBed.get(ComponentLockerService);
+    service.register('test', 'firstelement');
+    service.register('test2', 'test');
+    service.register('test3', 'secondelement');
+    const items = service.lock('firstelement');
+    console.log(items);
+    expect(items.length).toBe(3);
+  });
 });
