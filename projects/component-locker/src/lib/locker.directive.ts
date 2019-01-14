@@ -30,6 +30,8 @@ export class LockerDirective implements OnInit, OnDestroy {
       console.log('Locked', data);
       if (data.locked) {
         this.el.nativeElement.style.backgroundColor = 'black';
+      } else {
+        this.el.nativeElement.style.backgroundColor = 'white';
       }
     });
   }
