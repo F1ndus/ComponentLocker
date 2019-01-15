@@ -40,7 +40,7 @@ export class ComponentLockerService {
 
   // TODO logic for intersecting dependencies
   public unregister(name: string) {
-    console.log('unregister', ' name: ', name);
+/*    console.log('unregister', ' name: ', name);
     if (this.lockCounterMap.get(name) === 0) {
       this.map.forEach((v, k) => {
         v.forEach((item, index) => {
@@ -58,7 +58,7 @@ export class ComponentLockerService {
           }
         });
       });
-    }
+    }*/
   }
 
   public lock(componente: string) {
