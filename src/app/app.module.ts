@@ -3,12 +3,10 @@ import {NgModule} from '@angular/core';
 import {ComponentLockerModule} from 'component-locker';
 
 import {AppComponent} from './app.component';
-import { TestDirective } from './test.directive';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TestDirective
+    AppComponent
   ],
   imports: [
     BrowserModule,

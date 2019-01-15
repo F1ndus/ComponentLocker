@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {PersistService} from './persist.service';
 import {ComponentLockerService} from 'component-locker';
 
 @Component({
@@ -11,8 +10,7 @@ export class AppComponent implements OnInit {
   private toggled: boolean = true;
 
   constructor(
-    private lockservice: ComponentLockerService,
-    private persist: PersistService
+    private lockservice: ComponentLockerService
     ) {}
 
   title = 'locker-demo';
