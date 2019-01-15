@@ -8,6 +8,7 @@ import {ComponentLockerService} from 'component-locker';
 })
 export class AppComponent implements OnInit {
   private toggled: boolean = true;
+  private val = 'meem';
 
   constructor(
     private lockservice: ComponentLockerService
@@ -16,10 +17,10 @@ export class AppComponent implements OnInit {
   title = 'locker-demo';
   meemObs = this.lockservice.subject;
   lock() {
-    this.lockservice.lock('meem');
+    this.lockservice.lock(this.val);
   }
   unlock() {
-    this.lockservice.unlock('meem');
+    this.lockservice.unlock(this.val);
   }
 
   ngOnInit(): void {

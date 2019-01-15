@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {LockEvent} from './lock-event';
 
@@ -9,9 +9,11 @@ export class ComponentLockerService {
   public subject;
   public map;
   public string = '';
+  private lockCounterMap: Map<string, number>;
 
   constructor() {
-    this.map =  new Map<string, Array<string>>();
+    this.map = new Map<string, Array<string>>();
+    this.lockCounterMap = new Map<string, number>();
     this.subject = new Subject<LockEvent>();
     console.log('service init');
   }
@@ -23,15 +25,18 @@ export class ComponentLockerService {
     } else {
       this.map.set(dependingOn, [name]);
     }
-    this.string = '?????';
     console.log('register after', this.map, this.string);
   }
 
   // TODO logic for intersecting dependencies
   public unregister(name: string) {
     console.log('unregister', ' name: ', name);
-    this.map.forEach( (v, k) => {
-      this.map.get(k).forEach( (item, index) => {
+    this.map.forEach((v, k) => {
+
+      const count =
+        this.map.get(k).filter(val => val === name).length;
+      console.log('Found ', count, 'items');
+      this.map.get(k).forEach((item, index) => {
         console.log(k, ' -> ', item, index);
         if (item === name) {
           console.log('found item');
@@ -48,6 +53,7 @@ export class ComponentLockerService {
     const list = this.collect(componente);
     console.log(list);
     list.forEach(x => {
+      this.increaseCounter(x);
       const k = new LockEvent(true, x);
       this.subject.next(k);
     });
@@ -56,7 +62,11 @@ export class ComponentLockerService {
   public unlock(componente: string) {
     // TODO compute all the time?
     const list = this.collect(componente);
-    list.forEach(x => this.subject.next(new LockEvent(false, x)));
+    list.forEach(x => {
+      if (this.decreaseCounter(x) === 0) {
+        this.subject.next(new LockEvent(false, x));
+      }
+    });
   }
 
   public collect(component: string): Array<string> {
@@ -65,7 +75,7 @@ export class ComponentLockerService {
   }
 
   private collectDependents(array: Array<string>): Array<string> {
-    if (array === undefined || array.length === 0 ) {
+    if (array === undefined || array.length === 0) {
       return [];
     } else {
       // TODO detect circular dependencies (maybe with dupe check, there shouldnt be dupes in the list)
@@ -74,10 +84,27 @@ export class ComponentLockerService {
       }));
     }
   }
+
+  private increaseCounter(c: string): number {
+    let newValue = 1;
+    if (this.lockCounterMap.has(c)) {
+      newValue = this.lockCounterMap.get(c) + 1;
+    }
+    this.lockCounterMap.set(c, newValue);
+    return newValue;
+  }
+
+  private decreaseCounter(c: string): number {
+    const newValue = this.lockCounterMap.get(c) - 1;
+    if (newValue < 0 ) { throw new Error('Negative Counter in Map'); }
+    this.lockCounterMap.set(c, newValue);
+    return newValue;
+  }
 }
+
 // TODO flatmap problem lösen
 const concat = (x, y) =>
-  x.concat(y)
+  x.concat(y);
 
 const flatMap = (f, xs) =>
-  xs.map(f).reduce(concat, [])
+  xs.map(f).reduce(concat, []);

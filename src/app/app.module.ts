@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {ComponentLockerModule} from 'component-locker';
-
+import {Form, FormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
 
 @NgModule({
@@ -11,6 +11,7 @@ import {AppComponent} from './app.component';
   imports: [
     BrowserModule,
     ComponentLockerModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
