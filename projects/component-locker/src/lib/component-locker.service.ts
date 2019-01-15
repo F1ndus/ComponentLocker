@@ -19,11 +19,21 @@ export class ComponentLockerService {
   }
 
   public register(name: string, dependingOn: string) {
-    console.log('register before', this.map.size);
+    console.log('register before');
     if (this.map.has(dependingOn)) {
-      this.map.get(dependingOn).push(name);
+      if (this.map.get(dependingOn).filter( x => x === name).length === 0) {
+        console.log('Chain not found, gonna add');
+        this.map.get(dependingOn).push(name);
+      } else {
+        console.log('Chain already there, skipping');
+      }
     } else {
       this.map.set(dependingOn, [name]);
+    }
+    console.log('countermap', this.lockCounterMap, name);
+    if (this.lockCounterMap.get(name) > 0) {
+      const k = new LockEvent(true, name);
+      this.subject.next(k);
     }
     console.log('register after', this.map, this.string);
   }
@@ -31,21 +41,24 @@ export class ComponentLockerService {
   // TODO logic for intersecting dependencies
   public unregister(name: string) {
     console.log('unregister', ' name: ', name);
-    this.map.forEach((v, k) => {
-
-      const count =
-        this.map.get(k).filter(val => val === name).length;
-      console.log('Found ', count, 'items');
-      this.map.get(k).forEach((item, index) => {
-        console.log(k, ' -> ', item, index);
-        if (item === name) {
-          console.log('found item');
-          console.log('before', this.map.get(k));
-          this.map.get(k).splice(index, 1);
-          console.log('after', this.map.get(k));
-        }
+    if (this.lockCounterMap.get(name) === 0) {
+      this.map.forEach((v, k) => {
+        v.forEach((item, index) => {
+          console.log(k, ' -> ', item, index);
+          if (item === name) {
+            console.log('found item, check if not used');
+            if (this.lockCounterMap.get(item) === 0) {
+              console.log('not used deleting');
+              console.log('before', this.map.get(k));
+              this.map.get(k).splice(index, 1);
+              console.log('after', this.map.get(k));
+            } else {
+              console.log('used, leave dependency');
+            }
+          }
+        });
       });
-    });
+    }
   }
 
   public lock(componente: string) {

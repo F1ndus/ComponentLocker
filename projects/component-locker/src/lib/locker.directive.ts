@@ -28,20 +28,20 @@ export class LockerDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Directive oninit', this.name);
-    this.lockerService.register(this.name, this.dependsOn)
     this.lockObservable.pipe(
       takeUntil(this.unsubscribe),
       filter(event => event.componentName === this.name)
     ).subscribe(data => {
       console.log('Locked', data);
       if (data.locked) {
-        this.el.nativeElement.style.opacity = 'opacity: 0.5';
+        this.el.nativeElement.style.blur = '8px';
         this.toggleControls(true);
       } else {
-        this.el.nativeElement.style.opacity = 'opacity: 1';
+        this.el.nativeElement.style.blur = '0px';
         this.toggleControls(false);
       }
     });
+    this.lockerService.register(this.name, this.dependsOn);
   }
   private toggleControls(disable: boolean) {
     const elements = this.el.nativeElement.getElementsByTagName('input');
