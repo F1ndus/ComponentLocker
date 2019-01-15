@@ -27,6 +27,7 @@ export class ComponentLockerService {
     console.log('register after', this.map, this.string);
   }
 
+  // TODO logic for intersecting dependencies
   public unregister(name: string) {
     console.log('unregister', ' name: ', name);
     this.map.forEach( (v, k) => {

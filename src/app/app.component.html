@@ -1,12 +1,44 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div *ngIf="toggled">
-  <div [ngClass]="'main'" clLocker [name]="'meem'" [dependsOn]="'root'"  [lockObservable]="meemObs"></div>
-  <div [ngClass]="'main'" clLocker [name]="'meem2'" [dependsOn]="'meem'"  [lockObservable]="meemObs"></div>
-  <div [ngClass]="'main'" clLocker [name]="'meem4'" [dependsOn]="'meem3'"  [lockObservable]="meemObs"></div>
-  <div [ngClass]="'main'" clLocker [name]="'meem5'" [dependsOn]="'meem2'"  [lockObservable]="meemObs"></div>
+  <div [ngClass]="'main'" clLocker [name]="'meem'" [dependsOn]="'root'" [lockObservable]="meemObs">
+    First
+    <label>
+      <input type="text" [name]="'test'">
+      <div>
+        <input type="checkbox">
+      </div>
+    </label>
+  </div>
+  <div [ngClass]="'main'" clLocker [name]="'meem2'" [dependsOn]="'meem'" [lockObservable]="meemObs">
+    Second
+    <label>
+      <input type="text" [name]="'test'">
+      <div>
+        <input type="checkbox">
+      </div>
+    </label>
+  </div>
+  <div [ngClass]="'main'" clLocker [name]="'meem4'" [dependsOn]="'meem3'" [lockObservable]="meemObs">
+    Third
+    <label>
+      <input type="text" [name]="'test'">
+      <div>
+        <input type="checkbox">
+      </div>
+    </label>
+  </div>
+  <div [ngClass]="'main'" clLocker [name]="'meem5'" [dependsOn]="'meem2'" [lockObservable]="meemObs">
+    Fourth
+    <label>
+      <input type="text" [name]="'test'">
+      <div>
+        <input type="checkbox">
+      </div>
+    </label>
+  </div>
 
+  <button (click)="lock()">Lock</button>
+  <button (click)="unlock()">Unlock</button>
+
+  <button (click)="toggle()">Toggle</button>
 </div>
-<button (click)="lock()">Lock</button>
-<button (click)="unlock()">Unlock</button>
-
-<button (click)="toggle()">Toggle</button>

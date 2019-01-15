@@ -35,12 +35,20 @@ export class LockerDirective implements OnInit, OnDestroy {
     ).subscribe(data => {
       console.log('Locked', data);
       if (data.locked) {
-        this.el.nativeElement.style.backgroundColor = 'black';
+        this.el.nativeElement.style.opacity = 'opacity: 0.5';
+        this.toggleControls(true);
       } else {
-        this.el.nativeElement.style.backgroundColor = 'white';
-
+        this.el.nativeElement.style.opacity = 'opacity: 1';
+        this.toggleControls(false);
       }
     });
+  }
+  private toggleControls(disable: boolean) {
+    const elements = this.el.nativeElement.getElementsByTagName('input');
+    for (let i = 0; i < elements.length; i++) {
+      console.log(elements[i].disabled);
+      elements[i].disabled = disable;
+    }
   }
 
   ngOnDestroy(): void {
