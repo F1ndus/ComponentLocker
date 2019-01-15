@@ -1,15 +1,35 @@
-import { Component } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {PersistService} from './persist.service';
+import {ComponentLockerService} from 'component-locker';
 
 @Component({
   selector: 'ld-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private toggled: boolean = true;
+
+  constructor(
+    private lockservice: ComponentLockerService,
+    private persist: PersistService
+    ) {}
+
   title = 'locker-demo';
-  meemObs = new BehaviorSubject({componentName: 'meem', locked: false});
-  test() {
-    this.meemObs.next({componentName: 'meem', locked: true});
+  meemObs = this.lockservice.subject;
+  lock() {
+    this.lockservice.lock('meem');
+  }
+  unlock() {
+    this.lockservice.unlock('meem');
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  toggle() {
+    this.toggled = !this.toggled;
   }
 }
+
