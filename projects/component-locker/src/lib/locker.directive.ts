@@ -41,7 +41,7 @@ export class LockerDirective implements OnInit, OnDestroy {
     this.lockerService.register(this.name, this.dependsOn);
   }
   private toggleControls(disable: boolean) {
-    const elements = this.el.nativeElement.getElementsByTagName('input');
+    const elements = this.el.nativeElement.querySelectorAll('input, select');
     for (let i = 0; i < elements.length; i++) {
       console.log(elements[i].disabled);
       elements[i].disabled = disable;
