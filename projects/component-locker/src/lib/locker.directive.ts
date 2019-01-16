@@ -18,9 +18,6 @@ export class LockerDirective implements OnInit, OnDestroy {
   private lockCounter = 0;
 
   @Input()
-  lockObservable: Observable<LockEvent>;
-
-  @Input()
   name: string;
 
   @Input()
@@ -28,16 +25,16 @@ export class LockerDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Directive oninit', this.name);
-    this.lockObservable.pipe(
+    this.lockerService.subject.pipe(
       takeUntil(this.unsubscribe),
       filter(event => event.componentName === this.name)
     ).subscribe(data => {
       console.log('Locked', data);
       if (data.locked) {
-        this.el.nativeElement.style.blur = '8px';
+        // this.el.nativeElement.style.filter = 'blur(8px)';
         this.toggleControls(true);
       } else {
-        this.el.nativeElement.style.blur = '0px';
+        // this.el.nativeElement.style.filter = 'blur(0px)';
         this.toggleControls(false);
       }
     });

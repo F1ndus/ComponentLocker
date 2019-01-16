@@ -8,7 +8,7 @@ describe('ComponentLockerService', () => {
   it('should be created', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     expect(service).toBeTruthy();
-  });
+  });r
 
   it('should hold new element', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);

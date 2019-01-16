@@ -1,6 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div *ngIf="toggled">
-  <div [ngClass]="'main'" clLocker [name]="'meem'" [dependsOn]="'root'" [lockObservable]="meemObs">
+  <div [ngClass]="'main'" clLocker [name]="'meem'" [dependsOn]="'root'" >
     meem
     <label>
       <input type="text" [name]="'test'">
@@ -9,7 +9,7 @@
       </div>
     </label>
   </div>
-  <div [ngClass]="'main'" clLocker [name]="'meem2'" [dependsOn]="'meem'" [lockObservable]="meemObs">
+  <div [ngClass]="'main'" clLocker [name]="'meem2'" [dependsOn]="'meem'" >
     meem2
     <label>
       <input type="text" [name]="'test'">
@@ -18,7 +18,7 @@
       </div>
     </label>
   </div>
-  <div [ngClass]="'main'" clLocker [name]="'meem4'" [dependsOn]="'meem3'" [lockObservable]="meemObs">
+  <div [ngClass]="'main'" clLocker [name]="'meem4'" [dependsOn]="'meem3'" >
     meem4
     <label>
       <input type="text" [name]="'test'">
@@ -27,7 +27,7 @@
       </div>
     </label>
   </div>
-  <div [ngClass]="'main'" clLocker [name]="'meem5'" [dependsOn]="'meem2'" [lockObservable]="meemObs">
+  <div [ngClass]="'main'" clLocker [name]="'meem5'" [dependsOn]="'meem2'" >
     meem5
     <label>
       <input type="text" [name]="'test'">

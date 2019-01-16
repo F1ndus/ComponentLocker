@@ -6,7 +6,7 @@ import {LockEvent} from './lock-event';
   providedIn: 'root'
 })
 export class ComponentLockerService {
-  public subject;
+  public subject: Subject<LockEvent>;
   public map;
   public string = '';
   private lockCounterMap: Map<string, number>;
@@ -19,7 +19,7 @@ export class ComponentLockerService {
   }
 
   public register(name: string, dependingOn: string) {
-    console.log('register before');
+    console.log('register before [countmapstate: ', this.lockCounterMap, '] [comp: ' , name , ']', ' [dependson: ' , dependingOn, ']');
     if (this.map.has(dependingOn)) {
       if (this.map.get(dependingOn).filter( x => x === name).length === 0) {
         console.log('Chain not found, gonna add');
@@ -30,12 +30,16 @@ export class ComponentLockerService {
     } else {
       this.map.set(dependingOn, [name]);
     }
-    console.log('countermap', this.lockCounterMap, name);
+
+    if (!this.lockCounterMap.has(name)) {
+      this.lockCounterMap.set(name, 0);
+    }
+
     if (this.lockCounterMap.get(name) > 0) {
       const k = new LockEvent(true, name);
       this.subject.next(k);
     }
-    console.log('register after', this.map, this.string);
+    console.log('register before [countmapstate: ', this.lockCounterMap, '] [comp: ' , name , ']', ' [dependson: ' , dependingOn, ']');
   }
 
   // TODO logic for intersecting dependencies
@@ -62,17 +66,20 @@ export class ComponentLockerService {
   }
 
   public lock(componente: string) {
+    console.log('lock before [countmapstate: ', this.lockCounterMap, '] [comp: ' , componente , ']');
     // TODO compute all the time?
     const list = this.collect(componente);
-    console.log(list);
+    console.log('lockchain ', list);
     list.forEach(x => {
       this.increaseCounter(x);
       const k = new LockEvent(true, x);
       this.subject.next(k);
     });
+    console.log('countermap after lock', this.lockCounterMap);
   }
 
   public unlock(componente: string) {
+    console.warn('unlock ', componente, 'cMap', this.lockCounterMap);
     // TODO compute all the time?
     const list = this.collect(componente);
     list.forEach(x => {
@@ -80,6 +87,8 @@ export class ComponentLockerService {
         this.subject.next(new LockEvent(false, x));
       }
     });
+    console.log('coutnermap after unlock cMap:', this.lockCounterMap);
+
   }
 
   public collect(component: string): Array<string> {
@@ -99,15 +108,18 @@ export class ComponentLockerService {
   }
 
   private increaseCounter(c: string): number {
+    console.log('increase counter for ', c , 'old: ', this.lockCounterMap.get(c));
     let newValue = 1;
     if (this.lockCounterMap.has(c)) {
       newValue = this.lockCounterMap.get(c) + 1;
     }
     this.lockCounterMap.set(c, newValue);
+    console.log('new counter for ', c , 'new: ', this.lockCounterMap.get(c));
     return newValue;
   }
 
   private decreaseCounter(c: string): number {
+    console.log('decrease counter for ', c , 'old: ', this.lockCounterMap.get(c));
     const newValue = this.lockCounterMap.get(c) - 1;
     if (newValue < 0 ) { throw new Error('Negative Counter in Map'); }
     this.lockCounterMap.set(c, newValue);
