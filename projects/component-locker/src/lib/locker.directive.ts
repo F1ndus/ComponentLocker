@@ -31,17 +31,19 @@ export class LockerDirective implements OnInit, OnDestroy {
     ).subscribe(data => {
       console.log('Locked', data);
       if (data.locked) {
-        // this.el.nativeElement.style.filter = 'blur(8px)';
+        this.el.nativeElement.style.pointerEvents = 'none';
+        this.el.nativeElement.style.opacity = '0.5';
         this.toggleControls(true);
       } else {
-        // this.el.nativeElement.style.filter = 'blur(0px)';
+        this.el.nativeElement.style.pointerEvents = 'auto';
+        this.el.nativeElement.style.opacity = '1';
         this.toggleControls(false);
       }
     });
     this.lockerService.register(this.name, this.dependsOn);
   }
   private toggleControls(disable: boolean) {
-    const elements = this.el.nativeElement.querySelectorAll('input, select');
+    const elements = this.el.nativeElement.querySelectorAll('input, select, button');
     for (let i = 0; i < elements.length; i++) {
       console.log(elements[i].disabled);
       elements[i].disabled = disable;
@@ -53,7 +55,7 @@ export class LockerDirective implements OnInit, OnDestroy {
     this.lockerService.unregister(this.name);
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    console.log('destroy directive', this.lockerService.map);
+    console.log('destroy directive', this.lockerService.referenceMap);
   }
 
 }

@@ -13,51 +13,51 @@ describe('ComponentLockerService', () => {
   it('should hold new element', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement')[0]).toEqual('test');
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement')[0]).toEqual('test');
   });
 
   it('should hold two elements, not overriding the old value', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'firstelement');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement').length).toEqual(2);
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement').length).toEqual(2);
   });
 
-  it('should create 2 entries in the map', () => {
+  it('should create 2 entries in the referenceMap', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'secondelement');
-    expect(service.map.size).toBe(2);
-    expect(service.map.get('firstelement').length).toEqual(1);
-    expect(service.map.get('secondelement').length).toEqual(1);
+    expect(service.referenceMap.size).toBe(2);
+    expect(service.referenceMap.get('firstelement').length).toEqual(1);
+    expect(service.referenceMap.get('secondelement').length).toEqual(1);
   });
 
-  it('should remove entry from the map', () => {
+  it('should remove entry from the referenceMap', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'firstelement');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement').length).toEqual(2);
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement').length).toEqual(2);
     service.unregister('test');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement').length).toEqual(1);
-    expect(service.map.get('firstelement')[0]).toEqual('test2');
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement').length).toEqual(1);
+    expect(service.referenceMap.get('firstelement')[0]).toEqual('test2');
   });
 
-  it('should remove entry from the map 2', () => {
+  it('should remove entry from the referenceMap 2', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'firstelement');
     service.register('test3', 'firstelement');
     service.register('test4', 'firstelement');
     service.register('test5', 'firstelement');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement').length).toEqual(5);
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement').length).toEqual(5);
     service.unregister('test');
-    expect(service.map.size).toBe(1);
-    expect(service.map.get('firstelement').length).toEqual(4);
+    expect(service.referenceMap.size).toBe(1);
+    expect(service.referenceMap.get('firstelement').length).toEqual(4);
   });
 
   /**
@@ -69,7 +69,7 @@ describe('ComponentLockerService', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'firstelement');
-    const items = service.collect('firstelement');
+    const items = service.collectChilds('firstelement');
     console.log(items);
     expect(items.length).toBe(3);
   });
@@ -82,7 +82,7 @@ describe('ComponentLockerService', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'firstelement');
     service.register('test2', 'test');
-    const items = service.collect('firstelement');
+    const items = service.collectChilds('firstelement');
     console.log(items);
     expect(items.length).toBe(3);
   });
@@ -96,7 +96,7 @@ describe('ComponentLockerService', () => {
     service.register('test', 'firstelement');
     service.register('test2', 'test');
     service.register('test3', 'secondelement');
-    const items = service.collect('firstelement');
+    const items = service.collectChilds('firstelement');
     console.log(items);
     expect(items.length).toBe(3);
   });
@@ -111,7 +111,7 @@ describe('ComponentLockerService', () => {
     service.register('lock', 'firstelement');
     service.register('test2', 'lock');
     service.register('lock', 'test2');
-    const items = service.collect('firstelement');
+    const items = service.collectChilds('firstelement');
     console.log(items);
     expect(items.length).toBe(2);
   });*/
@@ -133,8 +133,8 @@ describe('ComponentLockerService', () => {
   it('should remove entry', () => {
     const service: ComponentLockerService = TestBed.get(ComponentLockerService);
     service.register('test', 'root');
-    expect(service.map.size).toBe(1);
+    expect(service.referenceMap.size).toBe(1);
     service.unregister('test');
-    expect(service.map.get('root').length).toEqual(0);
+    expect(service.referenceMap.get('root').length).toEqual(0);
   });
 });
