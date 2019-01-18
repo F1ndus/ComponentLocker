@@ -1,7 +1,6 @@
 import {Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {filter, takeUntil, tap} from 'rxjs/operators';
-import {LockEvent} from './lock-event';
+import {Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
 import {ComponentLockerService} from './component-locker.service';
 
 @Directive({
@@ -25,11 +24,13 @@ export class LockerDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Directive oninit', this.name);
+    //  transition: opacity .25s ease-in-out;
+    this.el.nativeElement.style.transition = '.25s ease-in-out';
     this.lockerService.subject.pipe(
       takeUntil(this.unsubscribe),
       filter(event => event.componentName === this.name)
     ).subscribe(data => {
-      console.log('Locked', data);
+      // console.log('Locked', data);
       if (data.locked) {
         this.el.nativeElement.style.pointerEvents = 'none';
         this.el.nativeElement.style.opacity = '0.5';
@@ -45,17 +46,14 @@ export class LockerDirective implements OnInit, OnDestroy {
   private toggleControls(disable: boolean) {
     const elements = this.el.nativeElement.querySelectorAll('input, select, button');
     for (let i = 0; i < elements.length; i++) {
-      console.log(elements[i].disabled);
       elements[i].disabled = disable;
     }
   }
 
   ngOnDestroy(): void {
-    console.log('dead', this.name);
     this.lockerService.unregister(this.name);
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    console.log('destroy directive', this.lockerService.referenceMap);
   }
 
 }

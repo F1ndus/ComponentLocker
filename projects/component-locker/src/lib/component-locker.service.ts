@@ -7,7 +7,7 @@ import {LockEvent} from './lock-event';
 })
 export class ComponentLockerService {
   public subject: Subject<LockEvent>;
-  public referenceMap;
+  private referenceMap;
   public string = '';
   private lockCounterMap: Map<string, number>;
 
@@ -23,13 +23,15 @@ export class ComponentLockerService {
       if (this.referenceMap.get(dependingOn).filter(x => x === name).length === 0) {
         // Parent Component already registered, child component not present
         this.referenceMap.get(dependingOn).push(name);
+        this.lockIfParentLocked(dependingOn, name);
       } else {
         // Relation already registered, nothing to do
-        console.log('Chain already there, skipping');
+       // console.log('Chain already there, skipping');
       }
     } else {
       // Parent Component not registered, register both
       this.referenceMap.set(dependingOn, [name]);
+      this.lockIfParentLocked(dependingOn, name);
     }
 
     // Create entry in lockcountermap, if currently not present
@@ -37,12 +39,24 @@ export class ComponentLockerService {
       this.lockCounterMap.set(name, 0);
     }
 
+    // Do the same with parent
+    if (!this.lockCounterMap.has(dependingOn)) {
+      this.lockCounterMap.set(dependingOn, 0);
+    }
+
     // If Relation was already registered and is still locked, relock it
     if (this.lockCounterMap.get(name) > 0) {
       const k = new LockEvent(true, name);
       this.subject.next(k);
     }
+
     console.log('register after [countmapstate: ', this.lockCounterMap, '] [comp: ' , name , ']', ' [dependson: ' , dependingOn, ']');
+  }
+
+  private lockIfParentLocked(dependingOn: string, name: string) {
+    if (this.lockCounterMap.get(dependingOn) > 0) {
+      this.lock(name);
+    }
   }
 
   public unregister(name: string) {
@@ -76,7 +90,6 @@ export class ComponentLockerService {
       }
     });
     // console.log('coutnermap after unlock cMap:', this.lockCounterMap);
-
   }
 
   /**

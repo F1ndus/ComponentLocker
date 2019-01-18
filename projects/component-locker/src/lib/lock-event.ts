@@ -5,7 +5,6 @@ export class LockEvent {
     this.componentName = componentName;
   }
 
-
   locked: boolean;
   componentName: string;
 }
