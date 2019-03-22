@@ -30,8 +30,8 @@
 // import 'core-js/es6/date';
 // import 'core-js/es6/array';
 // import 'core-js/es6/regexp';
-// import 'core-js/es6/map';
-// import 'core-js/es6/weak-map';
+// import 'core-js/es6/referenceMap';
+// import 'core-js/es6/weak-referenceMap';
 // import 'core-js/es6/set';
 
 /**
